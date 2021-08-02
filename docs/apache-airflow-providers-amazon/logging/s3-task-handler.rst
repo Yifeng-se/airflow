@@ -47,3 +47,20 @@ You can also use `LocalStack <https://localstack.cloud/>`_ to emulate Amazon S3 
 To configure it, you must additionally set the endpoint url to point to your local stack.
 You can do this via the Connection Extra ``host`` field.
 For example, ``{"host": "http://localstack:4572"}``
+
+
+Verify your IAM role works
+''''''''''''''''''''''''''
+
+It's always good to verify your IAM role has access to upload/download files to your s3 bucket before you use it in airflow: 
+Add the id and secret key into your ``~/.aws/credentials`` file as a new profile:
+
+.. code-block:: ini
+
+    [airflow_iam]
+    aws_access_key_id=XXX
+    aws_secret_access_key=YYY
+
+try ``aws s3 cp YOUR_LOCAL_FILE s3://YOUR_BUCKET_FILE --profile airflow_iam`` and ``aws s3 cp s3://YOUR_BUCKET_FILE YOUR_LOCAL_FILE  --profile airflow_iam``
+
+If you have problem with upload/download, ask your cloud admin to grant the right access to your AIRFLOW_IAM role. For example the IAM role will need ``AllowKMSGenerateDataKey`` if the s3 bucket is encrypted.
